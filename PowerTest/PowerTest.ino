@@ -1,22 +1,27 @@
 // Code for Power Testing of Battery
-#include "Time.h"
-#include "TimeLib.h"
+#include <TimeLib.h>
 
 #define HI 255
 #define LO 0
 #define VREF 3.3
 #define LEDstate LO
 
+
 void setup() {
   pinMode(A20, INPUT);    // Pin A20 used for ADC
-  pinMode(A19, OUTPUT);   // Controls blink for IR LED and IR photosensor
   pinMode(A18, OUTPUT);   // Indicator LED
 
-  Serial.begin(9600);
+  setSyncProvider(getTeensy3Time);
   
-  rtc.begin();
-  rtc.setTime(12, 0, 0);
-  rtc.setDate(18, 2, 2017);
+  Serial.begin(115200);
+  while (!Serial);  // Wait for Arduino Serial Monitor to open
+  delay(100);
+  if (timeStatus()!= timeSet) {
+    Serial.println("Unable to sync with the RTC");
+  } else {
+    Serial.println("RTC has set the system time");
+  }
+
 }
 
 void loop() {
@@ -27,18 +32,35 @@ void loop() {
   val = analogRead(A20);
   voltage = val * (VREF / 1023);
 
-  analogWrite(A19, HI);
-  delay(1000);
-  analogWrite(A19, LO);
-  delay(1000);
-
   if (voltage > 2 && temp == 1)  {
     analogWrite(A18, HI);
-    temp == 0;
+    temp = 0;
     // write code to get time
     // write code to print time to command console
     // Serial.println("time")
     
   }
 
+}
+
+time_t getTeensy3Time()
+{
+  return Teensy3Clock.get();
+}
+
+/*  code to process time sync messages from the serial port   */
+#define TIME_HEADER  "T"   // Header tag for serial time sync message
+
+unsigned long processSyncMessage() {
+  unsigned long pctime = 0L;
+  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013 
+
+  if(Serial.find(TIME_HEADER)) {
+     pctime = Serial.parseInt();
+     return pctime;
+     if( pctime < DEFAULT_TIME) { // check the value is a valid time (greater than Jan 1 2013)
+       pctime = 0L; // return 0 to indicate that the time is not valid
+     }
+  }
+  return pctime;
 }
