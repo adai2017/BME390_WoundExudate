@@ -1,10 +1,10 @@
 // Code for Power Testing of Battery
 #include <TimeLib.h>
 
+
 #define HI 255
 #define LO 0
 #define VREF 3.3
-#define LEDstate LO
 
 
 void setup() {
@@ -32,7 +32,7 @@ void loop() {
   val = analogRead(A20);
   voltage = val * (VREF / 1023);
 
-  if (voltage > 2 && temp == 1)  {
+  if (voltage < 2 && temp == 1)  {
     analogWrite(A18, HI);
     temp = 0;
     // write code to get time
@@ -41,11 +41,34 @@ void loop() {
     
   }
 
+  if (Serial.available()) {
+    time_t t = processSyncMessage();
+    if (t != 0) {
+      Teensy3Clock.set(t); // set the RTC
+      setTime(t);
+    }
+  }
+  digitalClockDisplay();  
+  delay(1000);
 }
 
 time_t getTeensy3Time()
 {
   return Teensy3Clock.get();
+}
+
+void digitalClockDisplay() {
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.print(" ");
+  Serial.print(day());
+  Serial.print(" ");
+  Serial.print(month());
+  Serial.print(" ");
+  Serial.print(year()); 
+  Serial.println(); 
 }
 
 /*  code to process time sync messages from the serial port   */
