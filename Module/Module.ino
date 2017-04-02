@@ -20,7 +20,7 @@ void setup() {
   // Initialize Pins
   pinMode(A5, OUTPUT);
   pinMode(A4, OUTPUT);
-  pinMode(A1, OUTPUT);
+  pinMode(A20, OUTPUT);
 
 }
 
@@ -46,9 +46,9 @@ void loop() {
       delay(1000);
       analogWrite(A4, LOW);
       delay(1000);
-      analogWrite(A1, HI);
+      analogWrite(A20, HI);
       delay(1000);
-      analogWrite(A1, LOW);
+      analogWrite(A20, LOW);
       delay(1000);
     }
   }
