@@ -31,7 +31,20 @@ clear; clc; close all;
 
 % files = {'Water_NoSponge_04272017_1.mat'};
 
-%files = {'Water_Light2Gamgee_04062017_5.mat'};
+%files = {'Water_Light2Gamgee_04062017_5.mat'};'
+
+% files = {'Baseline_Light2Gamgee_04062017_1.mat',...
+%          'Baseline_Light2Gamgee_04062017_2.mat'};
+
+% files = {'Baseline_NoLight2Gamgee_04062017_1.mat',...
+%          'Baseline_NoLight4Gamgee_04062017_1.mat'};
+
+% files = {'Baseline_NoLight_04062017_1.mat',...
+%          'Baseline_NoLight_04062017_2.mat'};
+
+% files = {'Baseline_NoLightCase_04062017_1.mat',...
+%          'Baseline_NoLightCase_04062017_2.mat',...
+%          'Baseline_NoLightCase_04062017_3.mat'};
 
 N = length(files);
 % Init = zeros(1,N);
